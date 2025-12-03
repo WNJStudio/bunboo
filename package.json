@@ -1,6 +1,6 @@
 {
     "name": "bunboo",
-    "version": "0.0.3",
+    "version": "0.0.4",
     "description": "a simple logging library built with bun",
     "type": "module",
     "author": "WNJStudio",

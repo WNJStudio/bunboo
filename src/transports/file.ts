@@ -25,7 +25,6 @@ export class FileTransport implements Transport {
         this.maxFiles = options.maxFiles || 10;
         this.rotateByDate = options.rotateByDate || false;
         this.rotateBySize = options.rotateBySize === undefined ? true : options.rotateBySize;
-        this.checkPath();
     }
 
     private async checkPath() {
@@ -37,11 +36,14 @@ export class FileTransport implements Transport {
 
     private async getName() {
         const fileentries = await readdir(this.path, { withFileTypes: true });
-        let candidate = `${this.name}_${new Date().toISOString()}.json`;
+        let candidate = `${this.name}_${new Date().toISOString()}.json`.replaceAll(":", "");
 
         const files: { name: string; size: number; creation: Date }[] = [];
         for (const f of fileentries) {
             if (f.isFile()) {
+                if (!f.name.startsWith(this.name)) {
+                    continue;
+                }
                 const fs = await lstat(path.join(this.path, f.name));
                 const size = fs.size;
                 const creation = fs.birthtime;
@@ -81,16 +83,18 @@ export class FileTransport implements Transport {
     }
 
     public async writeLog(level: LogLevels, message: string, fields: Record<string, any>) {
+        await this.checkPath();
         const fname = await this.getName();
         const f = Bun.file(path.join(this.path, fname));
 
         let con: { data?: any[] } = {};
         try {
+            if (!f.size) {
+                await Bun.write(f, `{"data":[]}`);
+            }
             con = await f.json();
             if (con && con.data) {
                 con.data.push({ fields, timestamp: new Date().toISOString(), level, message });
-            } else {
-                throw new Error("empty file");
             }
         } catch (error) {
             con = { data: [{ fields, timestamp: new Date().toISOString(), level, message }] };
