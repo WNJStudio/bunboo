@@ -53,7 +53,7 @@ export class FileTransport implements Transport {
         files.sort((a, b) => a.creation.getTime() - b.creation.getTime());
         // check removal
         if (files.length > this.maxFiles) {
-            const n = this.maxFiles - files.length;
+            const n = files.length - this.maxFiles;
             const toRemove = files.splice(0, n);
             for (const r of toRemove) {
                 await rm(path.join(this.path, r.name), { force: true });
