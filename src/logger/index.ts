@@ -21,7 +21,7 @@ export class Logger {
     }
 
     private getFileAndLine() {
-        const s = getStack()?.[2];
+        const s = getStack()?.[4];
         if (s && "getFileName" in s) {
             const fn = s.getFileName() || "";
             const mod = path.relative(this.baseDir, fn).split(path.sep);
