@@ -1,4 +1,4 @@
-import { LoggerOptions, LogLevels } from "../types";
+import { LoggerOptions, LogLevel } from "..";
 import path from "node:path";
 const getStack = () => {
     const obj: { stack?: NodeJS.CallSite[] } = {};
@@ -47,7 +47,7 @@ export class Logger {
         return { fields: { ...fields, ...this.getFileAndLine() }, message };
     }
 
-    private log(level: LogLevels, param: any[]) {
+    private log(level: LogLevel, param: any[]) {
         const f = this.processFields(param);
         this.transports.forEach((t) => {
             t.writeLog(level, f.message, f.fields);

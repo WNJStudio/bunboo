@@ -1,4 +1,4 @@
-import { sql } from "drizzle-orm";
+import { defineRelations, sql } from "drizzle-orm";
 import { integer, primaryKey, sqliteTable, text } from "drizzle-orm/sqlite-core";
 
 const textField = () => text({ mode: "text" });
@@ -30,3 +30,5 @@ export const logs = sqliteTable("logs", {
     updated_at: updatedAtField().notNull(),
     updated_by: textField().default("SYSTEM").notNull(),
 });
+
+export const relations = defineRelations({ fieldsDef, logs });

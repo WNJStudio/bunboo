@@ -1,5 +1,5 @@
 import chalk from "chalk";
-import { LogLevels, Transport } from "../types";
+import { LogLevel, Transport } from "..";
 import path from "node:path";
 
 export class ConsoleTransport implements Transport {
@@ -41,7 +41,7 @@ export class ConsoleTransport implements Transport {
         };
     }
 
-    public async writeLog(level: LogLevels, message: string, fields: Record<string, any>) {
+    public async writeLog(level: LogLevel, message: string, fields: Record<string, any>) {
         const ts = chalk.green(new Date().toISOString());
         const levelPadded = level.padEnd(5, " ");
         let l = levelPadded;

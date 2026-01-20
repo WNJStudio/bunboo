@@ -1,4 +1,4 @@
-import { LogLevels, Transport } from "../types";
+import { LogLevel, Transport } from "..";
 import path from "node:path";
 import { exists, lstat, mkdir, readdir, rm } from "node:fs/promises";
 
@@ -11,7 +11,7 @@ type FileTransportOptions = {
     name: string;
 };
 
-export class FileTransport implements Transport {
+export class JSONFileTransport implements Transport {
     private name;
     private path;
     private maxSize;
@@ -82,7 +82,7 @@ export class FileTransport implements Transport {
         return candidate;
     }
 
-    public async writeLog(level: LogLevels, message: string, fields: Record<string, any>) {
+    public async writeLog(level: LogLevel, message: string, fields: Record<string, any>) {
         await this.checkPath();
         const fname = await this.getName();
         const f = Bun.file(path.join(this.path, fname));

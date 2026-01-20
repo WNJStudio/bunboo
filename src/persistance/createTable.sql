@@ -1,4 +1,4 @@
-CREATE TABLE `fields` (
+CREATE TABLE IF NOT EXISTS `fields` (
 	`name` text NOT NULL,
 	`type` text NOT NULL,
 	`format` text,
@@ -9,8 +9,7 @@ CREATE TABLE `fields` (
 	`updated_by` text DEFAULT 'SYSTEM' NOT NULL,
 	PRIMARY KEY(`name`, `type`)
 );
---> statement-breakpoint
-CREATE TABLE `logs` (
+CREATE TABLE IF NOT EXISTS `logs` (
 	`id` text PRIMARY KEY NOT NULL,
 	`timestamp` text DEFAULT (CURRENT_TIMESTAMP) NOT NULL,
 	`level` text DEFAULT 'INFO' NOT NULL,

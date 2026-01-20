@@ -1,14 +1,19 @@
 {
     "name": "bunboo",
-    "version": "0.0.5",
+    "version": "0.0.6",
     "description": "a simple logging library built with bun",
     "type": "module",
     "author": "WNJStudio",
-    "devEngines": { "runtime": { "name": "bun", "onFail": "error", "version": "^1.3.3" } },
+    "devEngines": {
+        "runtime": {
+            "name": "bun",
+            "onFail": "error",
+            "version": "^1.3.3"
+        }
+    },
     "license": "Apache-2.0",
-    "repository": { "url": "https://github.com/WNJStudio/bunboo" },
-    "scripts": {
-        "generate": "drizzle-kit generate"
+    "repository": {
+        "url": "https://github.com/WNJStudio/bunboo"
     },
     "exports": {
         ".": {
@@ -18,11 +23,10 @@
         }
     },
     "devDependencies": {
-        "@types/bun": "^1.3.3",
-        "drizzle-kit": "^0.31.7"
+        "@types/bun": "^1.3.6"
     },
     "dependencies": {
         "chalk": "^5.6.2",
-        "drizzle-orm": "^0.44.7"
+        "drizzle-orm": "^1.0.0-beta.11-05230d9"
     }
 }

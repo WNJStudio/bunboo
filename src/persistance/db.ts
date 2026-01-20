@@ -1,16 +1,19 @@
 import { Database } from "bun:sqlite";
 import { and, eq, like, or, sql } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/bun-sqlite";
-import { migrate } from "drizzle-orm/bun-sqlite/migrator";
-import { GetLogsConfig, LogLevels, Transport } from "../types";
+import { GetLogsConfig, LogLevel, Transport } from "..";
 import * as schema from "./schema";
+// @ts-ignore
+import createTable from "./createTable.sql" with { type: "file" };
+
+const createTableStmt = await Bun.file(createTable).text();
 
 export class DB implements Transport {
     private instance;
 
     constructor(client: Database) {
-        this.instance = drizzle({ client, schema });
-        migrate(this.instance, { migrationsFolder: "migrations" });
+        client.run(createTableStmt);
+        this.instance = drizzle({ client, relations: schema.relations });
     }
 
     public async getFields() {
@@ -74,7 +77,7 @@ export class DB implements Transport {
         const data = await this.instance.query.logs.findMany({
             columns: { created_at: false, created_by: false, updated_at: false, updated_by: false },
             orderBy: (l, { desc }) => [desc(l.timestamp)],
-            where: filters,
+            where: { RAW: filters },
             limit: config.limit,
             offset: config.limit * config.page,
         });
@@ -94,7 +97,7 @@ export class DB implements Transport {
         };
     }
 
-    public async writeLog(level: LogLevels = "INFO", message: string, fields: Record<string, any>) {
+    public async writeLog(level: LogLevel = "INFO", message: string, fields: Record<string, any>) {
         await this.instance.insert(schema.logs).values({ level, message, fields });
     }
 }
